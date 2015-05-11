@@ -37,7 +37,7 @@ Not only does this allow proper autocomplete on projects with extra
 includes and flags, but there is also support for flycheck so that it
 doesn't complain about missing header files.
 
-## Key Bindings
+# Key Bindings
 
     Key Binding       |                 Description
 ----------------------|------------------------------------------------------------

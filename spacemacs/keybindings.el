@@ -107,6 +107,7 @@ Ensure that helm is required before calling FUNC."
   "fed" 'find-dotfile
   "fev" 'spacemacs/display-and-copy-version
   "ff" 'ido-find-file
+  "cf" 'helm-for-files
   "fF" 'helm-find-files
   "fg" 'rgrep
   "fj" 'dired-jump

@@ -35,7 +35,7 @@ To use this contribution add it to your `~/.spacemacs`
 
 Along with other things this layer includes company-auctex, it's only enabled
 if you also enable my other contrib layer `company-mode`.
-
+ feh
 ### Tags navigation
 
 Tags navigation can be performed with key `%` thanks to [evil-matchit][].

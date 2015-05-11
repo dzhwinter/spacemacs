@@ -103,7 +103,7 @@ which require an initialization must be listed explicitly in the list.")
           (while (re-search-forward "\\(-I\\|-isystem\n\\)\\(\\S-\\)" nil t)
             (replace-match (format "%s%s" (match-string 1)
                                    (expand-file-name (match-string 2) invocation-dir))))
-          ;; Turn lines into a list
+          ;; Trn lines into a list
           (setq compile-flags
                 ;; remove whitespaces at the end of each line, if any
                 (mapcar #'(lambda (line)
@@ -123,6 +123,28 @@ which require an initialization must be listed explicitly in the list.")
       (company-clang-guess-prefix))
 
     (setq company-clang-prefix-guesser 'company-mode/more-than-prefix-guesser))
+  ;; (defun c-c++/init-irony ()
+  ;;   (use-package irony
+  ;;     :diminish irony-mode
+  ;;     :defar t
+  ;;     :init
+  ;;     (progn
+  ;;       (add-hook 'c++-mode-hook 'irony-mode)
+  ;;       (add-hook 'c-mode-hook 'irony-mode)
+  ;;       ;;see https://github.com/Sarcasm/irony-mode/issues/154#issuecomment-100649914
+  ;;       ;;just use .clang_complete from now on
+  ;;       ;; cannnot support json format. it is unstable at <2015-05-11 一>
+
+
+  ;;       ;; replace the 'completion at point ' and 'complete-symbol' bindings in
+  ;;       ;; irony mode's buffers ny irony-mode's function
+  ;;       (defun my-irony-mode-hook ()
+  ;;         (define-key irony-mode-map [remap completion-at-point]
+  ;;           'irony-completion-at-point-async)
+  ;;         (define-key irony-mode-map [remap complete-symbol]
+  ;;           'irony-completion-at-point-async))
+  ;;       (add-hook 'irony-mode-hook 'my-irony-mode-hook)
+  ;;       (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))))
 
   (defun c-c++/init-company-c-headers ()
     (use-package company-c-headers
