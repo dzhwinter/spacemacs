@@ -18,6 +18,15 @@
     company-c-headers
     flycheck
     stickyfunc-enhance
+    ;; my custom package
+    irony
+    company-irony
+    flycheck-irony
+    google-c-style
+    helm-gtags
+    ggtags
+    rtags
+    ws-butler
     )
   "List of all packages to install and/or initialize. Built-in packages
 which require an initialization must be listed explicitly in the list.")
@@ -72,7 +81,75 @@ which require an initialization must be listed explicitly in the list.")
         (require 'stickyfunc-enhance))
       (add-to-hooks 'spacemacs/lazy-load-stickyfunc-enhance
                     '(c-mode-hook c++-mode-hook)))))
+;;define my init hook
+(defun c-c++/post-init-google-c-style ()
+  (use-package google-c-style
+    :init (add-hook 'c-mode-common-hook 'google-set-c-style)))
+(defun c-c++/init-irony ()
+  (use-package irony
+    :diminish irony-mode
+    :defer t
+    :init
+    (progn
+      (add-hook 'c++-mode-hook 'irony-mode)
+      (add-hook 'c-mode-hook 'irony-mode)
+      ;;see https://github.com/Sarcasm/irony-mode/issues/154#issuecomment-100649914
+      ;;just use .clang_complete from now on
+      ;; cannnot support json format. it is unstable at <2015-05-11 一>
 
+
+      ;; replace the 'completion at point ' and 'complete-symbol' bindings in
+      ;; irony mode's buffers ny irony-mode's function
+      (defun my-irony-mode-hook ()
+        (define-key irony-mode-map [remap completion-at-point]
+          'irony-completion-at-point-async)
+        (define-key irony-mode-map [remap complete-symbol]
+          'irony-completion-at-point-async))
+      (add-hook 'irony-mode-hook 'my-irony-mode-hook)
+      (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))))
+
+(defun c-c++/init-company-irony ()
+  (use-package company-irony
+    :defer t))
+(defun c-c++/init-flycheck-irony ()
+  (use-package flycheck
+    :defer t
+    :config (add-hook 'flycheck-mode-hook 'flycheck-irony-hook)))
+(defun c-c++/init-ggtags ()
+  (use-package ggtags
+    :defer t))
+(defun c-c++/init-rtags ()
+  (use-package rtags
+    :init (require 'company-rtags)
+    :config))
+(defun c-c++/init-helm-make ()
+  (use-package helm-make
+    :defer t))
+(defun c-c++/init-helm-gtags ()
+  (use-package helm-gtags
+    :diminish helm-gtags-mode
+    :init(progn
+           (add-hook 'c-common-hook 'helm-gtags-mode)
+           (setq helm-gtags-ignore-case t
+                 helm-gtags-auto-update t
+                 helm-gtags-use-input-at-cursor t
+                 helm-gtags-pulse-at-cursor t))
+    :defer t
+    :config
+    (progn
+      (evil-leader/set-key-for-mode 'c++-mode
+        "mhi" 'helm-imenu
+        "mhd" 'helm-gtags-dwim
+        "mhr" 'helm-gtags-find-rtag
+        "mhs" 'helm-gtags-find-symbol
+        "mhf" 'helm-gtags-find-files))))
+
+(defun c-c++/init-ws-butler ()
+  (use-package ws-butler
+    :diminish ws-butler-mode
+    :init(prog
+          (add-hook 'c-mode-common-hook 'ws-butler-mode)
+          (add-hook 'cython-mode-hook 'ws-butler-mode))))
 (when (configuration-layer/layer-usedp 'auto-completion)
   (defun c-c++/post-init-company ()
     ;; push this backend by default
