@@ -23,6 +23,7 @@
     company-irony
     flycheck-irony
     google-c-style
+    helm-make
     helm-gtags
     ggtags
     rtags
@@ -111,10 +112,16 @@ which require an initialization must be listed explicitly in the list.")
 (defun c-c++/init-company-irony ()
   (use-package company-irony
     :defer t))
-(defun c-c++/init-flycheck-irony ()
-  (use-package flycheck
-    :defer t
-    :config (add-hook 'flycheck-mode-hook 'flycheck-irony-hook)))
+(when (configuration-layer/layer-usedp 'syntax-checking)
+  (defun c-c++/init-flycheck-irony ()
+    (use-package flycheck-irony
+      :if (configuration-layer/package-usedp 'flycheck)
+      :defer t
+      :init (add-hook 'flycheck-mode-hook 'flycheck-irony-setup))))
+  ;; (defun c-c++/post-flycheck-irony ()
+  ;;   (use-package flycheck
+  ;;     :defer t
+  ;;     :config (add-hook 'flycheck-mode-hook #'flycheck-irony-hook)))
 (defun c-c++/init-ggtags ()
   (use-package ggtags
     :defer t))
@@ -147,17 +154,25 @@ which require an initialization must be listed explicitly in the list.")
 (defun c-c++/init-ws-butler ()
   (use-package ws-butler
     :diminish ws-butler-mode
-    :init(prog
+    :init(progn
           (add-hook 'c-mode-common-hook 'ws-butler-mode)
           (add-hook 'cython-mode-hook 'ws-butler-mode))))
+;; (defun c-c++/init-company-c-headers ()
+;;   (use-package company-c-headers
+;;     :if (configuration-layer/package-usedp 'company)
+;;     :defer t
+;;     :init (push 'company-c-headers company-backends-c-mode-common))))
+;; no auto-complete-mode at all
 (when (configuration-layer/layer-usedp 'auto-completion)
   (defun c-c++/post-init-company ()
     ;; push this backend by default
-    (push '(company-clang :with company-yasnippet)
-          company-backends-c-mode-common)
+    ;; (push '(company-irony :with company-yasnippet)
+    ;;       company-backends-c-mode-common)
+    (push 'company-irony company-backends-c-mode-common)
     (spacemacs|add-company-hook c-mode-common)
     (spacemacs|add-company-hook cmake-mode)
-
+    (setq company-idle-delay 0.08)
+    (setq company-minimum-prefix-length 1)
     ;; .clang_complete file loading
     ;; Sets the arguments for company-clang based on a project-specific text file.
 

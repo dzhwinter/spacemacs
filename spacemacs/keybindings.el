@@ -106,10 +106,10 @@ Ensure that helm is required before calling FUNC."
   "fec" 'find-contrib-file
   "fed" 'find-dotfile
   "fev" 'spacemacs/display-and-copy-version
-  "ff" 'ido-find-file
-  "cf" 'helm-for-files
+  "cf" 'ido-find-file
+  "ff" 'helm-for-files
   "fF" 'helm-find-files
-  "fg" 'rgrep
+  "fgx" 'rgrep
   "fj" 'dired-jump
   "fo" 'spacemacs/open-in-external-app
   "fS" 'evil-write-all
